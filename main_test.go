@@ -22,23 +22,57 @@ func TestGetPackage(t *testing.T) {
 }
 
 func TestNewPackage(t *testing.T) {
-	got := NewPackage(GetPackage("errors"), nil)
-	want := Package{
-		Name:      "errors",
-		Types:     nil,
-		Constants: nil,
-		Variables: nil,
-		Functions: []string{
-			"New",
-			"Unwrap",
-			"Is",
-			"As",
+	tests := []struct {
+		input string
+		want  Package
+	}{
+		{
+			input: "errors",
+			want: Package{
+				Name:      "errors",
+				StdName:   "errors",
+				Types:     nil,
+				Constants: nil,
+				Variables: nil,
+				Functions: []string{
+					"New",
+					"Unwrap",
+					"Is",
+					"As",
+				},
+			},
+		},
+		{
+			input: "io/ioutil",
+			want: Package{
+				Name:      "ioutil",
+				StdName:   "io/ioutil",
+				Types:     nil,
+				Constants: nil,
+				Variables: []string{
+					"Discard",
+				},
+				Functions: []string{
+					"ReadAll",
+					"ReadFile",
+					"WriteFile",
+					"ReadDir",
+					"NopCloser",
+					"TempFile",
+					"TempDir",
+				},
+			},
 		},
 	}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("unexpected result:\n  got:  %#v\n  want: %#v", got, want)
-		return
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			got := NewPackage(GetPackage(tt.input), nil)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("unexpected result:\n  got:  %#v\n  want: %#v", got, tt.want)
+				return
+			}
+		})
 	}
 }
 
