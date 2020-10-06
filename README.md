@@ -14,6 +14,12 @@ $ xstd -pkg context > std_gen.go
 
 Then start to extend the package and use it. You can just replace your import spec of the standard package to the package generated above.
 
+### `excludes` option
+
+If you want to redefine your extended version of constant/variable/function/type defined in standard package, you can use `-excludes` option.
+The option takes a list of constant/variable/function/type names separated by comma, and excludes these from generated file so you can define
+your own version but which has same name with standard package's one.
+
 ## Example
 
 Here is an example with `context` package.
