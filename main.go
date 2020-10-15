@@ -117,7 +117,7 @@ func NewPackage(base *packages.Package, excludes []string) Package {
 						var names []string
 
 						for _, name := range spec.Names {
-							if name.IsExported() || oneOf(name.Name, excludes) {
+							if name.IsExported() && !oneOf(name.Name, excludes) {
 								names = append(names, name.Name)
 							}
 						}
