@@ -76,6 +76,39 @@ func TestNewPackage(t *testing.T) {
 	}
 }
 
+func TestNewPackageWithExclude(t *testing.T) {
+	tests := []struct {
+		input string
+		want  Package
+	}{
+		{
+			input: "errors",
+			want: Package{
+				Name:      "errors",
+				StdName:   "errors",
+				Types:     nil,
+				Constants: nil,
+				Variables: nil,
+				Functions: []string{
+					"New",
+					"Is",
+					"As",
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			got := NewPackage(GetPackage(tt.input), []string{"Unwrap"})
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("unexpected result:\n  got:  %#v\n  want: %#v", got, tt.want)
+				return
+			}
+		})
+	}
+}
+
 func TestSourceErrors(t *testing.T) {
 	t.Run("errors", func(t *testing.T) {
 		got, err := NewPackage(GetPackage("errors"), nil).Source()
